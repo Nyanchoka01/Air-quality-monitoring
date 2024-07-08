@@ -48,7 +48,7 @@ except ValueError as e:
 
 # Streamlit file uploader
 uploaded_files = st.file_uploader("Choose images to predict the air quality...", type=['jpg', 'jpeg', 'png'], accept_multiple_files=True)
-UPLOAD_DIR = "images"
+UPLOAD_DIR = "/"
 
 if uploaded_files:
     st.write(f"Number of images uploaded: {len(uploaded_files)}")
@@ -115,7 +115,7 @@ if image_files:
             if st.button(f"Delete",key = image_file):
                 delete_image(image_file)
             try:
-                df = pd.read_csv("Datasets/data.csv")
+                df = pd.read_csv("data.csv")
                 df = df[df['AQI'] == image_file.split('@')[0]]
                 output_string = ("\n".join([f"{col}: {value}" for col, value in df.iloc[0].items() if col !="AQI"]))
                 st.markdown(f"```\n{output_string}\n```")
