@@ -7,6 +7,7 @@ from tensorflow.keras.layers import Conv2D
 from PIL import Image
 import os
 import pandas as pd
+import requests
 # Set the title of the Streamlit web application
 st.markdown('<h1 style="color: blue;">AIR QUALITY MONITORING BY UNIVERSITY OF NAIROBI,DEPARTMENT OF ELECTRICAL AND INFORMATION ENGINEERING</h1>', unsafe_allow_html=True)
 
@@ -22,7 +23,24 @@ def delete_image(image_file):
     os.remove(image_path)
     st.write(f"Deleted:")
 # Path to the saved model
-model_path = 'C:\\Users\\Dione Nyanchoka\\Downloads\\mmodel.h5'
+model_path = 'https://drive.google.com/file/d/1GBY0y4kri03e4ScTjBaZ6S-uYBzZMcZa/view?usp=drive_link'
+
+def download_model():
+    url = model_path  # URL to your model file in the release
+    local_filename = "model_file"  # Local path to save the model file
+
+    if not os.path.exists(local_filename):
+        with st.spinner('Downloading model...'):
+            response = requests.get(url, stream=True)
+            total_size = int(response.headers.get('content-length', 0))
+            with open(local_filename, 'wb') as f:
+                for data in response.iter_content(1024):
+                    f.write(data)
+
+    return local_filename
+
+model_path = download_model()
+# Load your model here using the model_path
 model = load_model(model_path)
 
 # Function to load and preprocess the image
